@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Python Functions</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --navy: #0d1b2a;
+    --deep: #1b2838;
+    --gold: #c9a84c;
+    --gold-light: #e8c97a;
+    --white: #ffffff;
+    --off-white: #f4f4f0;
+    --text: #1a1a2e;
+    --muted: #6b7280;
+    --card-bg: #ffffff;
+    --border: #e5e7eb;
+    --code-bg: #0d1b2a;
+    --accent: #1e40af;
+  }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    background: var(--off-white);
+    color: var(--text);
+    line-height: 1.75;
+  }
+
+  /* TICKER */
+  .ticker-wrap {
+    background: var(--gold);
+    overflow: hidden;
+    white-space: nowrap;
+    padding: 9px 0;
+    position: relative;
+  }
+
+  .ticker-track {
+    display: inline-flex;
+    animation: ticker-scroll 28s linear infinite;
+  }
+
+  .ticker-track:hover { animation-play-state: paused; }
+
+  .ticker-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: Georgia, serif;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--navy);
+    padding: 0 32px;
+  }
+
+  .ticker-dot {
+    width: 5px; height: 5px;
+    background: var(--navy);
+    border-radius: 50%;
+    opacity: 0.5;
+    flex-shrink: 0;
+  }
+
+  @keyframes ticker-scroll {
+    0%   { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+
+  /* HEADER */
+  header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 64px 40px 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  header::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  }
+
+  header .label {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    margin-bottom: 18px;
+  }
+
+  header h1 {
+    font-size: clamp(2.2rem, 5vw, 3.8rem);
+    font-weight: 700;
+    letter-spacing: -1px;
+    color: var(--white);
+    margin-bottom: 16px;
+  }
+
+  header p {
+    font-size: 1.1rem;
+    color: #94a3b8;
+    max-width: 620px;
+    margin: 0 auto;
+    font-style: italic;
+  }
+
+  /* NAV */
+  nav {
+    background: var(--white);
+    border-bottom: 1px solid var(--border);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+
+  nav a {
+    text-decoration: none;
+    color: var(--muted);
+    font-size: 13px;
+    letter-spacing: 0.5px;
+    padding: 16px 20px;
+    border-bottom: 3px solid transparent;
+    white-space: nowrap;
+    transition: all 0.2s;
+    font-family: Georgia, serif;
+  }
+
+  nav a:hover {
+    color: var(--navy);
+    border-bottom-color: var(--gold);
+  }
+
+  /* MAIN */
+  main {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 48px 24px 80px;
+  }
+
+  /* SECTION */
+  section {
+    margin-bottom: 56px;
+  }
+
+  .section-label {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: Georgia, serif;
+    margin-bottom: 8px;
+  }
+
+  h2 {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  h3 {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin: 28px 0 12px;
+  }
+
+  p {
+    font-size: 1rem;
+    color: #374151;
+    margin-bottom: 16px;
+  }
+
+  /* CARDS */
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 28px 32px;
+    margin-bottom: 20px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+  }
+
+  .card-gold {
+    border-left: 4px solid var(--gold);
+  }
+
+  .card-navy {
+    border-left: 4px solid var(--navy);
+  }
+
+  /* GRID */
+  .grid-2 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .mini-card {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    font-size: 0.95rem;
+  }
+
+  .mini-card code {
+    display: block;
+    font-family: 'Courier New', monospace;
+    font-size: 1rem;
+    color: var(--gold-light);
+    margin-bottom: 6px;
+    font-weight: 700;
+  }
+
+  .mini-card span {
+    font-size: 0.8rem;
+    color: #94a3b8;
+  }
+
+  /* CODE BLOCK */
+  .code-block {
+    background: var(--code-bg);
+    color: #e2e8f0;
+    border-radius: 8px;
+    padding: 24px 28px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.88rem;
+    line-height: 1.7;
+    overflow-x: auto;
+    margin: 16px 0;
+    border: 1px solid #1e3a5f;
+    white-space: pre;
+  }
+
+  .code-block .kw { color: #93c5fd; }
+  .code-block .fn { color: var(--gold-light); }
+  .code-block .str { color: #86efac; }
+  .code-block .cm { color: #64748b; }
+  .code-block .num { color: #f9a8d4; }
+
+  /* FUNCTION TYPES TABLE */
+  .types-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    background: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+
+  .types-table th {
+    background: var(--navy);
+    color: var(--white);
+    padding: 14px 20px;
+    text-align: left;
+    font-size: 0.88rem;
+    letter-spacing: 0.5px;
+  }
+
+  .types-table td {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.95rem;
+    color: #374151;
+  }
+
+  .types-table tr:last-child td { border-bottom: none; }
+  .types-table tr:nth-child(even) td { background: #f9fafb; }
+
+  /* FLOW DIAGRAM */
+  .flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    margin: 20px 0;
+  }
+
+  .flow-box {
+    background: var(--navy);
+    color: var(--white);
+    border-radius: 6px;
+    padding: 12px 20px;
+    font-size: 0.88rem;
+    text-align: center;
+    min-width: 130px;
+  }
+
+  .flow-arrow {
+    color: var(--gold);
+    font-size: 1.4rem;
+    padding: 0 8px;
+  }
+
+  /* QUIZ */
+  #quiz-section {
+    background: var(--navy);
+    border-radius: 12px;
+    padding: 40px;
+    margin-top: 60px;
+    color: var(--white);
+  }
+
+  #quiz-section h2 {
+    color: var(--white);
+    border-bottom-color: rgba(255,255,255,0.15);
+    margin-bottom: 8px;
+  }
+
+  #quiz-section .section-label { color: var(--gold); }
+
+  #quiz-section p.subtitle {
+    color: #94a3b8;
+    margin-bottom: 32px;
+    font-style: italic;
+  }
+
+  /* PROGRESS BAR */
+  .quiz-progress-wrap {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 28px;
+  }
+
+  .quiz-progress-bar {
+    flex: 1;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 4px;
+    overflow: hidden;
+  }
+
+  .quiz-progress-fill {
+    height: 100%;
+    background: var(--gold);
+    border-radius: 4px;
+    transition: width 0.4s ease;
+  }
+
+  .quiz-progress-label {
+    font-size: 12px;
+    color: #94a3b8;
+    white-space: nowrap;
+    font-family: Georgia, serif;
+    letter-spacing: 0.5px;
+  }
+
+  /* SLIDER VIEWPORT */
+  .quiz-viewport {
+    overflow: hidden;
+    position: relative;
+    min-height: 280px;
+  }
+
+  .quiz-track {
+    display: flex;
+    transition: transform 0.45s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    min-width: 100%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 10px;
+    padding: 28px 32px;
+    box-sizing: border-box;
+  }
+
+  .question-card .q-num {
+    font-size: 11px;
+    letter-spacing: 2px;
+    color: var(--gold);
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    font-family: Georgia, serif;
+  }
+
+  .question-card .q-text {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 22px;
+    line-height: 1.55;
+  }
+
+  .options { display: grid; gap: 10px; }
+
+  .option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: #cbd5e1;
+    font-size: 0.95rem;
+    user-select: none;
+  }
+
+  .option:hover:not(.locked) { background: rgba(201,168,76,0.1); border-color: var(--gold); color: var(--white); }
+  .option input[type="radio"] { accent-color: var(--gold); width: 16px; height: 16px; flex-shrink: 0; }
+  .option.correct { background: rgba(34,197,94,0.15); border-color: #22c55e; color: #86efac; }
+  .option.wrong   { background: rgba(239,68,68,0.12);  border-color: #ef4444; color: #fca5a5; }
+  .option.locked  { cursor: default; pointer-events: none; }
+
+  /* NAV ROW */
+  .quiz-nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 24px;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
+
+  .quiz-dots {
+    display: flex;
+    gap: 7px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .dot {
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: all 0.25s;
+    cursor: pointer;
+  }
+
+  .dot.active   { background: var(--gold); transform: scale(1.3); }
+  .dot.answered { background: rgba(201,168,76,0.5); }
+  .dot.correct  { background: #22c55e; }
+  .dot.wrong    { background: #ef4444; }
+
+  .btn {
+    padding: 11px 26px;
+    border-radius: 6px;
+    font-size: 0.92rem;
+    font-family: 'Times New Roman', Times, serif;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+    letter-spacing: 0.3px;
+  }
+
+  .btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .btn-gold { background: var(--gold); color: var(--navy); font-weight: 700; }
+  .btn-gold:hover:not(:disabled) { background: var(--gold-light); }
+  .btn-outline { background: transparent; color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
+  .btn-outline:hover:not(:disabled) { background: rgba(255,255,255,0.08); }
+  .btn-ghost { background: rgba(255,255,255,0.06); color: #94a3b8; border: 1px solid rgba(255,255,255,0.1); }
+  .btn-ghost:hover:not(:disabled) { background: rgba(255,255,255,0.12); color: var(--white); }
+
+  /* RESULT SLIDE */
+  .result-card {
+    min-width: 100%;
+    text-align: center;
+    padding: 36px 24px;
+    box-sizing: border-box;
+  }
+
+  .result-circle {
+    width: 110px; height: 110px;
+    border-radius: 50%;
+    border: 4px solid var(--gold);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    margin: 0 auto 20px;
+    background: rgba(201,168,76,0.08);
+  }
+
+  .result-circle .big { font-size: 2.2rem; font-weight: 700; color: var(--gold); line-height: 1; }
+  .result-circle .small { font-size: 0.75rem; color: #94a3b8; margin-top: 2px; }
+
+  .result-msg { font-size: 1.05rem; color: var(--white); margin-bottom: 8px; font-weight: 600; }
+  .result-sub { font-size: 0.9rem; color: #94a3b8; margin-bottom: 28px; font-style: italic; }
+
+  .result-review {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+
+  .review-chip {
+    font-size: 0.78rem;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-family: Georgia, serif;
+    letter-spacing: 0.3px;
+  }
+
+  .review-chip.c { background: rgba(34,197,94,0.15); color: #86efac; border: 1px solid #22c55e44; }
+  .review-chip.w { background: rgba(239,68,68,0.12); color: #fca5a5; border: 1px solid #ef444444; }
+
+  .result-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    color: #64748b;
+    text-align: center;
+    padding: 24px;
+    font-size: 0.85rem;
+    border-top: 1px solid #1e3a5f;
+  }
+
+  footer span { color: var(--gold); }
+
+  @media (max-width: 600px) {
+    header { padding: 48px 20px 36px; }
+    nav { padding: 0 12px; }
+    main { padding: 32px 16px 60px; }
+    #quiz-section { padding: 28px 20px; }
+    .flow { flex-direction: column; }
+    .flow-arrow { transform: rotate(90deg); }
+    .code-block { font-size: 0.8rem; padding: 16px; white-space: pre-wrap; }
+    .question-card { padding: 20px 16px; }
+    .quiz-nav { gap: 8px; }
+    .btn { padding: 10px 18px; font-size: 0.85rem; }
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker-wrap">
+  <div class="ticker-track" id="ticker">
+    <span class="ticker-item">Day 7 of Python<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">def keyword<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Built-in Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">User-Defined Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Return Statement<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Arguments and Parameters<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Day 7 of Python<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">def keyword<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Built-in Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">User-Defined Functions<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Return Statement<span class="ticker-dot"></span></span>
+    <span class="ticker-item">Arguments and Parameters<span class="ticker-dot"></span></span>
+  </div>
+</div>
+
+<header>
+  <div class="label">Day 7 of Python</div>
+  <h1>Functions</h1>
+  <p>Reusable blocks of code designed to perform a specific task, improve readability and reduce repetition</p>
+</header>
+
+<nav>
+  <a href="#intro">Introduction</a>
+  <a href="#types">Types</a>
+  <a href="#builtin">Built-in</a>
+  <a href="#userdefined">User-Defined</a>
+  <a href="#creating">Creating</a>
+  <a href="#return">Return</a>
+  <a href="#classification">Classification</a>
+  <a href="#quiz-section">Quiz</a>
+</nav>
+
+<main>
+
+  <!-- INTRO -->
+  <section id="intro">
+    <div class="section-label">Overview</div>
+    <h2>What are Functions?</h2>
+    <div class="card card-gold">
+      <p>Python functions are reusable blocks of code designed to perform a specific task. They help programmers organize code, reduce repetition, and improve readability and maintainability.</p>
+      <p>Functions are defined using the <strong>def</strong> keyword, followed by the function name, parentheses, and a colon. The code inside the function is indented beneath the definition.</p>
+    </div>
+  </section>
+
+  <!-- TYPES -->
+  <section id="types">
+    <div class="section-label">Classification</div>
+    <h2>Types of Functions in Python</h2>
+    <p>Python functions are generally classified into two main types:</p>
+    <div class="grid-2">
+      <div class="card card-navy">
+        <h3>1. Built-in Functions</h3>
+        <p>Functions already provided by Python that can be used directly without creating them. These are predefined and available for immediate use.</p>
+      </div>
+      <div class="card card-gold">
+        <h3>2. User-Defined Functions</h3>
+        <p>Functions created by the programmer using the <strong>def</strong> keyword to perform specific tasks according to the program's requirements.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BUILT-IN -->
+  <section id="builtin">
+    <div class="section-label">Built-in</div>
+    <h2>Common Built-in Functions</h2>
+    <p>These functions come with Python and are available for immediate use without any import or definition.</p>
+    <div class="grid-4">
+      <div class="mini-card"><code>print()</code><span>Display output</span></div>
+      <div class="mini-card"><code>len()</code><span>Get length</span></div>
+      <div class="mini-card"><code>max()</code><span>Find maximum</span></div>
+      <div class="mini-card"><code>min()</code><span>Find minimum</span></div>
+      <div class="mini-card"><code>sum()</code><span>Calculate sum</span></div>
+      <div class="mini-card"><code>type()</code><span>Get data type</span></div>
+      <div class="mini-card"><code>input()</code><span>Read user input</span></div>
+    </div>
+    <div class="code-block"><span class="fn">print</span>(<span class="str">"Hello"</span>)       <span class="cm"># Displays: Hello</span>
+<span class="fn">len</span>(<span class="str">"Python"</span>)     <span class="cm"># Returns: 6</span>
+<span class="fn">max</span>(<span class="num">10</span>, <span class="num">20</span>, <span class="num">30</span>)   <span class="cm"># Returns: 30</span></div>
+  </section>
+
+  <!-- USER-DEFINED -->
+  <section id="userdefined">
+    <div class="section-label">User-Defined</div>
+    <h2>User-Defined Functions</h2>
+    <div class="card card-navy">
+      <p>These are functions created by the programmer using the <strong>def</strong> keyword. User-defined functions are created to perform specific tasks according to the program's requirements.</p>
+    </div>
+  </section>
+
+  <!-- CREATING -->
+  <section id="creating">
+    <div class="section-label">Syntax</div>
+    <h2>Creating Functions in Python</h2>
+    <p>Functions are created using the <strong>def</strong> keyword followed by:</p>
+    <div class="card card-gold">
+      <p>Function name, Parentheses (), Colon : and Function body (indented code block)</p>
+    </div>
+    <h3>General Syntax</h3>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">function_name</span>(parameters):
+    <span class="cm"># Function body</span>
+    statements
+    <span class="kw">return</span> value</div>
+    <h3>Example Program</h3>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">greet</span>():
+    <span class="fn">print</span>(<span class="str">"Hello, World!"</span>)
+
+<span class="fn">greet</span>()   <span class="cm"># Output: Hello, World!</span></div>
+  </section>
+
+  <!-- RETURN -->
+  <section id="return">
+    <div class="section-label">Return Statement</div>
+    <h2>What is the Return Statement?</h2>
+    <p>In Python, the return statement terminates the execution of a function and optionally returns a value to the caller.</p>
+    <div class="card card-gold">
+      <h3>Key Points</h3>
+      <p>return ends the function immediately. It sends a value back to the caller. A function can have multiple return statements. If no return is used, Python returns None by default.</p>
+    </div>
+    <h3>Example 1 — Single Return Value</h3>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b</div>
+    <h3>Example 2 — Multiple Return Values</h3>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">calculate</span>(a, b):
+    <span class="kw">return</span> (a + b, a - b, a * b)
+
+sum_, diff, product = <span class="fn">calculate</span>(<span class="num">10</span>, <span class="num">5</span>)
+<span class="fn">print</span>(sum_)    <span class="cm"># 15</span>
+<span class="fn">print</span>(diff)    <span class="cm"># 5</span>
+<span class="fn">print</span>(product) <span class="cm"># 50</span></div>
+  </section>
+
+  <!-- CLASSIFICATION -->
+  <section id="classification">
+    <div class="section-label">Four Types</div>
+    <h2>Classification Based on Arguments and Return Values</h2>
+    <p>User-defined functions can be further classified into four types based on whether they accept arguments and whether they return values.</p>
+
+    <table class="types-table">
+      <thead>
+        <tr>
+          <th>Type</th>
+          <th>Arguments</th>
+          <th>Return Value</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Type 1</td>
+          <td>No Arguments</td>
+          <td>No Return Value</td>
+        </tr>
+        <tr>
+          <td>Type 2</td>
+          <td>With Arguments</td>
+          <td>No Return Value</td>
+        </tr>
+        <tr>
+          <td>Type 3</td>
+          <td>No Arguments</td>
+          <td>With Return Value</td>
+        </tr>
+        <tr>
+          <td>Type 4</td>
+          <td>With Arguments</td>
+          <td>With Return Value</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- TYPE 1 -->
+    <div class="card card-navy">
+      <h3>1. No Arguments and No Return Value</h3>
+      <p>A function that neither accepts any input from the caller nor returns any value back. It simply performs a specific task when called.</p>
+    </div>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">greet</span>():
+    <span class="fn">print</span>(<span class="str">"Welcome to Python Programming"</span>)
+
+<span class="fn">greet</span>()
+<span class="cm"># Output: Welcome to Python Programming</span></div>
+    <div class="flow">
+      <div class="flow-box">Function Call<br>greet()</div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box">print("Welcome...")</div>
+      <div class="flow-arrow">&#8594;</div>
+      <div class="flow-box">Output Displayed</div>
+    </div>
+
+    <!-- TYPE 2 -->
+    <div class="card card-navy" style="margin-top:28px">
+      <h3>2. With Arguments and No Return Value</h3>
+      <p>A function that accepts input values (arguments) from the caller but does not return any value back. It performs a task using the given inputs.</p>
+    </div>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">greet</span>(name):
+    <span class="fn">print</span>(<span class="str">"Hello"</span>, name)
+
+<span class="fn">greet</span>(<span class="str">"Ravi"</span>)
+<span class="cm"># Output: Hello Ravi</span></div>
+
+    <!-- TYPE 3 -->
+    <div class="card card-navy" style="margin-top:28px">
+      <h3>3. No Arguments and With Return Value</h3>
+      <p>A function that does not accept any input from the caller but returns a value after performing its task.</p>
+    </div>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">get_number</span>():
+    <span class="kw">return</span> <span class="num">100</span>
+
+num = <span class="fn">get_number</span>()
+<span class="fn">print</span>(num)
+<span class="cm"># Output: 100</span></div>
+
+    <!-- TYPE 4 -->
+    <div class="card card-navy" style="margin-top:28px">
+      <h3>4. With Arguments and With Return Value</h3>
+      <p>A function that accepts input values from the caller, processes them, and returns the result back to the caller.</p>
+    </div>
+    <div class="code-block"><span class="kw">def</span> <span class="fn">add</span>(a, b):
+    <span class="kw">return</span> a + b
+
+result = <span class="fn">add</span>(<span class="num">10</span>, <span class="num">20</span>)
+<span class="fn">print</span>(result)
+<span class="cm"># Output: 30</span></div>
+  </section>
+
+</main>
+
+<!-- QUIZ -->
+<div style="max-width:900px;margin:0 auto;padding:0 24px 80px;">
+<section id="quiz-section">
+  <div class="section-label">Test Your Knowledge</div>
+  <h2>Quiz</h2>
+  <p class="subtitle">One question at a time. Select an answer to move forward. Refresh for new questions.</p>
+
+  <!-- Progress -->
+  <div class="quiz-progress-wrap">
+    <div class="quiz-progress-bar"><div class="quiz-progress-fill" id="prog-fill" style="width:0%"></div></div>
+    <div class="quiz-progress-label" id="prog-label">1 of 8</div>
+  </div>
+
+  <!-- Slider -->
+  <div class="quiz-viewport">
+    <div class="quiz-track" id="quiz-track"></div>
+  </div>
+
+  <!-- Navigation -->
+  <div class="quiz-nav">
+    <button class="btn btn-ghost" id="btn-prev" onclick="goTo(currentIdx-1)" disabled>&#8592; Prev</button>
+    <div class="quiz-dots" id="quiz-dots"></div>
+    <button class="btn btn-gold" id="btn-next" onclick="handleNext()" disabled>Next &#8594;</button>
+  </div>
+</section>
+</div>
+
+<footer>
+  <p>Python Programming <span>|</span> Functions Module <span>|</span> Refresh for new quiz questions</p>
+</footer>
+
+<script>
+const questionBank = [
+  { q: "Which keyword is used to define a function in Python?", options: ["func", "define", "def", "function"], answer: 2 },
+  { q: "What does a built-in function mean?", options: ["A function created by the user", "A function that is predefined and comes with Python", "A function that always returns a value", "A function stored in a file"], answer: 1 },
+  { q: "What does the return statement do in a Python function?", options: ["Prints the result to the screen", "Restarts the function", "Terminates the function and optionally sends a value back", "Defines a new variable"], answer: 2 },
+  { q: "If no return statement is used in a function, Python returns:", options: ["0", "False", "None", "An error"], answer: 2 },
+  { q: "Which of the following is a valid example of calling a function named greet?", options: ["greet", "call greet()", "greet()", "def greet()"], answer: 2 },
+  { q: "Which built-in function is used to find the number of items in a string or list?", options: ["count()", "size()", "len()", "num()"], answer: 2 },
+  { q: "A function that accepts arguments but does not return a value is categorized as:", options: ["No arguments and no return value", "Arguments and return value", "Arguments and no return value", "No arguments and return value"], answer: 2 },
+  { q: "How many values can a Python function return at once?", options: ["Only one", "Maximum two", "Only integers", "Multiple values using a tuple"], answer: 3 },
+  { q: "What is the output of: def add(a, b): return a + b followed by print(add(3, 4))?", options: ["3", "4", "7", "34"], answer: 2 },
+  { q: "Which of the following correctly defines a function with a parameter?", options: ["def greet name:", "def greet(name):", "function greet(name):", "define greet(name):"], answer: 1 },
+  { q: "What is the purpose of a user-defined function?", options: ["To replace Python built-in functions", "To perform specific tasks as required by the program", "To automatically run at program startup", "To store variables globally"], answer: 1 },
+  { q: "Which built-in function is used to display output in Python?", options: ["display()", "show()", "write()", "print()"], answer: 3 },
+  { q: "In a function definition, the code inside the function must be:", options: ["Written in a new file", "Indented", "Written in capital letters", "Enclosed in curly braces"], answer: 1 },
+  { q: "A function with no arguments and a return value will:", options: ["Accept inputs and print them", "Take no input but send back a value to the caller", "Accept inputs and return multiple values", "Only work with numbers"], answer: 1 },
+  { q: "What does max(10, 20, 30) return?", options: ["10", "20", "30", "60"], answer: 2 },
+  { q: "Which of the following is NOT a built-in Python function?", options: ["len()", "sum()", "greet()", "type()"], answer: 2 },
+  { q: "How do you call a function named calculate with arguments 5 and 3?", options: ["calculate 5, 3", "call calculate(5, 3)", "calculate(5, 3)", "def calculate(5, 3)"], answer: 2 },
+  { q: "A function that has both arguments and a return value:", options: ["Receives no input and returns nothing", "Receives input, processes it, and returns a result", "Only works with strings", "Cannot have more than one argument"], answer: 1 },
+  { q: "What is the correct syntax for the return statement?", options: ["returns expression", "send expression", "return expression", "give back expression"], answer: 2 },
+  { q: "Which function type performs a task using inputs but does not send back any result?", options: ["No arguments and no return value", "Arguments and no return value", "No arguments and return value", "Arguments and return value"], answer: 1 }
+];
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+const TOTAL = 8;
+let selected = [];
+let currentIdx = 0;
+let answers = {};   // index -> chosen option index
+let revealed = {};  // index -> true after answer shown
+
+function initQuiz() {
+  selected = shuffle(questionBank).slice(0, TOTAL);
+  currentIdx = 0;
+  answers = {};
+  revealed = {};
+  buildSlides();
+  buildDots();
+  goTo(0);
+}
+
+function buildSlides() {
+  const track = document.getElementById('quiz-track');
+  track.innerHTML = selected.map((q, i) => `
+    <div class="question-card" id="qcard-${i}">
+      <div class="q-num">Question ${i + 1} of ${TOTAL}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options" id="opts-${i}">
+        ${q.options.map((opt, oi) => `
+          <label class="option" id="opt-${i}-${oi}" onclick="selectOption(${i},${oi})">
+            <input type="radio" name="q${i}" value="${oi}"> ${opt}
+          </label>
+        `).join('')}
+      </div>
+    </div>
+  `).join('') + `
+    <div class="result-card" id="result-slide">
+      <div class="result-circle">
+        <span class="big" id="res-score"></span>
+        <span class="small">out of ${TOTAL}</span>
+      </div>
+      <div class="result-msg" id="res-msg"></div>
+      <div class="result-sub" id="res-sub"></div>
+      <div class="result-review" id="res-review"></div>
+      <div class="result-buttons">
+        <button class="btn btn-gold" onclick="initQuiz()">Try Again</button>
+        <button class="btn btn-outline" onclick="location.reload()">New Questions</button>
+      </div>
+    </div>
+  `;
+}
+
+function buildDots() {
+  const wrap = document.getElementById('quiz-dots');
+  wrap.innerHTML = Array.from({length: TOTAL}, (_, i) =>
+    `<div class="dot" id="dot-${i}" onclick="goTo(${i})"></div>`
+  ).join('');
+}
+
+function selectOption(qIdx, optIdx) {
+  if (revealed[qIdx]) return;
+  answers[qIdx] = optIdx;
+  revealed[qIdx] = true;
+
+  const q = selected[qIdx];
+  for (let oi = 0; oi < q.options.length; oi++) {
+    const el = document.getElementById(`opt-${qIdx}-${oi}`);
+    el.classList.add('locked');
+    if (oi === q.answer) el.classList.add('correct');
+    else if (oi === optIdx) el.classList.add('wrong');
+  }
+
+  updateDot(qIdx);
+  updateNav();
+
+  // Auto-advance after a short pause
+  setTimeout(() => {
+    if (qIdx < TOTAL - 1) {
+      goTo(qIdx + 1);
+    } else {
+      showResult();
+    }
+  }, 900);
+}
+
+function goTo(idx) {
+  if (idx < 0 || idx > TOTAL) return;
+  currentIdx = idx;
+  const track = document.getElementById('quiz-track');
+  track.style.transform = `translateX(-${idx * 100}%)`;
+  updateProgress();
+  updateDots();
+  updateNav();
+}
+
+function handleNext() {
+  if (currentIdx < TOTAL) goTo(currentIdx + 1);
+}
+
+function updateProgress() {
+  const done = Object.keys(revealed).length;
+  const pct = Math.round((done / TOTAL) * 100);
+  document.getElementById('prog-fill').style.width = pct + '%';
+  document.getElementById('prog-label').textContent =
+    currentIdx < TOTAL ? `${currentIdx + 1} of ${TOTAL}` : 'Results';
+}
+
+function updateDots() {
+  for (let i = 0; i < TOTAL; i++) {
+    const d = document.getElementById(`dot-${i}`);
+    d.className = 'dot';
+    if (i === currentIdx) d.classList.add('active');
+    else if (revealed[i]) {
+      d.classList.add(answers[i] === selected[i].answer ? 'correct' : 'wrong');
+    } else if (answers[i] !== undefined) {
+      d.classList.add('answered');
+    }
+  }
+}
+
+function updateDot(idx) { updateDots(); }
+
+function updateNav() {
+  const prevBtn = document.getElementById('btn-prev');
+  const nextBtn = document.getElementById('btn-next');
+  prevBtn.disabled = currentIdx === 0;
+
+  if (currentIdx >= TOTAL) {
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Results';
+  } else if (currentIdx === TOTAL - 1) {
+    nextBtn.textContent = 'Finish';
+    nextBtn.disabled = !revealed[currentIdx];
+  } else {
+    nextBtn.textContent = 'Next \u2192';
+    nextBtn.disabled = !revealed[currentIdx];
+  }
+}
+
+function showResult() {
+  let score = 0;
+  selected.forEach((q, i) => { if (answers[i] === q.answer) score++; });
+  const pct = Math.round((score / TOTAL) * 100);
+
+  document.getElementById('res-score').textContent = score;
+  document.getElementById('res-msg').textContent =
+    pct >= 80 ? 'Excellent work!' :
+    pct >= 60 ? 'Good effort!' : 'Keep practicing!';
+  document.getElementById('res-sub').textContent =
+    pct >= 80 ? 'You have a strong understanding of Python Functions.' :
+    pct >= 60 ? 'Review the sections where you made mistakes and try again.' :
+    'Re-read the content above and take the quiz again.';
+
+  const review = document.getElementById('res-review');
+  review.innerHTML = selected.map((q, i) => {
+    const correct = answers[i] === q.answer;
+    return `<span class="review-chip ${correct ? 'c' : 'w'}">Q${i+1} ${correct ? '&#10003;' : '&#10007;'}</span>`;
+  }).join('');
+
+  document.getElementById('prog-fill').style.width = '100%';
+  document.getElementById('prog-label').textContent = 'Results';
+
+  // Update dots all final
+  updateDots();
+
+  // Hide nav
+  document.getElementById('btn-prev').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'none';
+  document.getElementById('quiz-dots').style.display = 'none';
+
+  goTo(TOTAL);
+}
+
+initQuiz();
+</script>
+</body>
+</html>
